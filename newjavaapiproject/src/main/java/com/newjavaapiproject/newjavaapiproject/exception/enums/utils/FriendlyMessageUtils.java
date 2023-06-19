@@ -1,0 +1,32 @@
+package com.newjavaapiproject.newjavaapiproject.exception.enums.utils;
+
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import com.newjavaapiproject.newjavaapiproject.enums.Language;
+import com.newjavaapiproject.newjavaapiproject.exception.enums.IFriendlyMessageCode;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@UtilityClass
+// clastaki bütün methodlar static olarak işaretleniyor.
+public class FriendlyMessageUtils {
+    private static final String RESOURCE_BUNDLE_NAME = "FriendlyMessage";
+    private static final String SPECIAL_CHARACTER = "__";
+
+    public static String getFriendlyMessage(Language language, IFriendlyMessageCode messageCode) {
+        String messageKey = null;
+        try {
+            Locale locale = new Locale(language.name());
+            ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME, locale);
+            messageKey = messageCode.getClass().getSimpleName() + SPECIAL_CHARACTER + messageCode;
+            return resourceBundle.getString(messageKey);
+
+        } catch (MissingResourceException missingResourceException) {
+            log.error("Friendly message not found key: {}", messageKey);
+            return null;
+        }
+
+    }
+}
